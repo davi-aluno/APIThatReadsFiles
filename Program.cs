@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -10,7 +12,9 @@ namespace ASPNetCoreWebAPI
         public static void Main(string[] args)
         {
             CreateDirectory();
+            CreatePDF();
             CreateFile();
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -29,7 +33,7 @@ namespace ASPNetCoreWebAPI
             {
                 if (di.Exists)
                 {
-                    Console.WriteLine("Diretorio j� existe!");
+                    Console.WriteLine("Diretorio já existe!");
                 }
                 else
                 {
@@ -44,20 +48,37 @@ namespace ASPNetCoreWebAPI
             }
         }
 
+        private static void CreatePDF()
+        {
+            string PDFname = @"files/example.pdf";
+
+            if (!File.Exists(PDFname))
+            {
+                Document document = new Document();
+                PdfWriter.GetInstance(document, new FileStream(PDFname, FileMode.Create));
+
+                document.Open();
+                document.Add(new Paragraph("Exemplo de PDF"));
+                document.Close();
+            }
+        }
         private static void CreateFile()
         {
             string filename = @"files/Produtos.txt";
-
-            try
+            
+            if (!File.Exists(filename))
             {
-                using (StreamWriter writer = new StreamWriter(filename))
+                try
                 {
-                    writer.Write("Fone de ouvido\nCelular\nImpressora\nNotebook");
+                    using (StreamWriter writer = new StreamWriter(filename))
+                    {
+                        writer.Write("Fone de ouvido\nCelular\nImpressora\nNotebook");
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + " | " + e.StackTrace);
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message + " | " + e.StackTrace);
+                }
             }
         }
     }

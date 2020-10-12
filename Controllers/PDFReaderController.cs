@@ -19,7 +19,7 @@ namespace ASPNetCoreWebAPI.Controllers
                 StringBuilder stringBuilder = new StringBuilder();
                 using (PdfReader reader = new PdfReader(@"files/example.pdf"))
                 {
-                    for (int i = 1; i < reader.NumberOfPages; i++)
+                    for (int i = 1; i <= reader.NumberOfPages; i++)
                     {
                         stringBuilder.Append(PdfTextExtractor.GetTextFromPage(reader, i));
                     }
